@@ -1,108 +1,51 @@
-/* Tree nodes, button nodes, and side layers */
-.treeNode {
-	height: 64px;
-	width: 64px;
-	border: var(--hqProperty1);
-	border-color: rgba(0, 0, 0, 0.125);
-	border-radius: 50%;
-	box-shadow: var(--hqProperty2a), var(--hqProperty2b);
-	font-size: 24px;
-	font-family: "Lucida Console", "Courier New", monospace;
-	color: rgba(0, 0, 0, 0.5);
-	text-shadow: var(--hqProperty3);
-	padding: 0;
-	margin: 0 10px 0 10px;
-}
-
-.nodeLabel {
-	font: inherit;
-	font-family: inherit;
-}
-
-.treeButton {
-	height: 64px;
-	width: 64px;
-	border: var(--hqProperty1);
-	border-color: rgba(0, 0, 0, 0.125);
-	border-radius: 33%;
-	box-shadow: var(--hqProperty2a), var(--hqProperty2b);
-	font-size: 40px;
-	font-family: "Lucida Console", "Courier New", monospace;
-	color: rgba(0, 0, 0, 0.5);
-	text-shadow: var(--hqProperty3);
-	padding: 0;
-}
-
-.smallNode {
-	height: 64px;
-	width: 64px;
-	font-size: 24px;
-}
-
-.resetNotify {
-	box-shadow: var(--hqProperty2a), 0 0 8px #ffffff;
-}
-
-.treeNode.can:hover {
-	transform: scale(1.15, 1.15);
-	box-shadow: var(--hqProperty2a), 0 0 20px var(--points);
-}
-
-.notify {
-	transform: scale(1.05, 1.05);
-	border-color: rgba(0, 0, 0, 0.125);
-	box-shadow: var(--hqProperty2a), 0 0 20px #ff0000;
+.popup {
+	border: 4px solid;
+	width: 256px;
+	min-height: 64px;
+	color: #000000;
+	display: block;
+	margin-top: 30px;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	border-color: rgba(0, 0, 0, 0.25);
 }
 
 
-
-.mark {
-	position: relative;
-	display: inline-block;
-	width: 30px;
-	height: 30px;
-	z-index: 10000;
-	margin-left: 0.9em;
-	margin-right: 0.9em;
-	margin-bottom: 1.2em;
-	border-right: 0.3em solid transparent;
-	border-bottom: 0.7em solid transparent;
-	border-left: 0.3em solid transparent;
-	font-size: 10px;
-	overflow:auto;
-	pointer-events: none;
+.popup-container {
+	position: absolute;
+	z-index: 9999999999999999999999999999999999;
+	right: 30px;
+	width: 256px;
 }
 
-.star {
-	position: relative;
-	display: inline-block;
-	width: 0;
-	height: 0;
-	z-index: 10000;
-	margin-left: 0.9em;
-	margin-right: 0.9em;
-	margin-bottom: 1.2em;
-	border-right: 0.3em solid transparent;
-	border-bottom: 0.7em solid #ffcc00;
-	border-left: 0.3em solid transparent;
-	font-size: 10px;
-	pointer-events: none;
-
+.achievement-popup {
+	background: #7182BC;
 }
 
-.star:before, .star:after {
-	content: "";
-    width: 0;
-    height: 0;
-    position: absolute;
-    top: .6em;
-    left: -1em;
-	border-right: 1em solid transparent;
-    border-bottom: 0.7em solid #ffcc00;
-    border-left: 1em solid transparent;
-	transform: rotate(-35deg);
+.milestone-popup {
+	background: #D1C23C;
 }
 
-.star:after {
-	transform: rotate(35deg);
+.fade-enter-active, .fade-leave-active {
+	transition: opacity .3s
+}
+
+.fade-transition {
+	transition: opacity .3s
+}
+
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+	opacity: 0
+}
+
+.redtext {
+	color: red;
+}
+
+.particle {
+	background-color: transparent;
+	display: block;
+	position:absolute;
+	z-index: 99999;
+	background-size:contain;
 }
