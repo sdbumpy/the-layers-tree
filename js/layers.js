@@ -31,7 +31,7 @@ addLayer("p", {
         	title: "active bonus",
 			cost(x) {
 				superpower = 0.1
-				if (hasUpgrade('spr', 31)) superpower *= 0.8
+				if (hasUpgrade('spr', 31)) {superpower *= 0.8;}
 				return new Decimal(2).pow(new Decimal(new Decimal(1+superpower).pow(x).sub(1)).div(superpower)).div(buyableEffect('pr', 11)).floor()
 			},
         	display() { return "×1.5 progress<br>"+format(getBuyableAmount(this.layer, this.id))+" → Currently: ×"+format(buyableEffect(this.layer, this.id))+"<br>Cost: "+format(this.cost())+" points" },
@@ -41,13 +41,17 @@ addLayer("p", {
             	setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
         	},
 			unlocked() {return hasUpgrade('p', 12)},
-			effect(x) {return new Decimal(1.5).pow(x)},
+			effect(x) {
+				effectiveAmount = x;
+				if (hasUpgrade('spr', 51)) {effectiveAmount = effectiveAmount.add(player.spr.total_tokens.div(4));}
+				return new Decimal(1.5).pow(effectiveAmount)
+			},
 		},
 		12: {
         	title: "idle bonus",
 			cost(x) {
 				superpower = 0.1
-				if (hasUpgrade('spr', 31)) superpower *= 0.8
+				if (hasUpgrade('spr', 31)) {superpower *= 0.8}
 				return new Decimal(2).pow(new Decimal(new Decimal(1+superpower).pow(x).sub(1)).div(superpower)).mul(20).div(buyableEffect('pr', 11)).floor()
 			},
         	display() { return "×1.5 points<br>"+format(getBuyableAmount(this.layer, this.id))+" → Currently: ×"+format(buyableEffect(this.layer, this.id))+"<br>Cost: "+format(this.cost())+" progress" },
@@ -57,7 +61,11 @@ addLayer("p", {
             	setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
         	},
 			unlocked() {return hasUpgrade('p', 12)},
-			effect(x) {return new Decimal(1.5).pow(x)},
+			effect(x) {
+				effectiveAmount = x;
+				if (hasUpgrade('spr', 53)) {effectiveAmount = effectiveAmount.add(player.spr.total_tokens.div(4));}
+				return new Decimal(1.5).pow(effectiveAmount)
+			},
 		},
 		13: {
         	title: "scaling bonus",
@@ -267,9 +275,9 @@ addLayer("pr", {
 	upgrades: {
 		11: {
 			title: "acceleration",
-			description: "×2 progress; unlock a prestige point buyable",
+			description: "×3 progress; unlock a prestige point buyable",
 			cost: new Decimal(1),
-			effect() {return new Decimal(2)},
+			effect() {return new Decimal(3)},
 		},
 		12: {
 			title: "get this now or layer",
@@ -345,7 +353,7 @@ addLayer("pt", {
     baseAmount() {return player.p.points},
     type: "static",
     base: new Decimal(10),
-    exponent: 1.1,
+    exponent: 1.125,
     gainMult() {
         mult = new Decimal(1)
         return mult
@@ -417,6 +425,7 @@ addLayer("spr", {
     startData() { return {
         unlocked: true,
 		points: new Decimal(0),
+		total: new Decimal(0),
 		total_tokens: new Decimal(0),
 		tokens: new Decimal(0),
     }},
@@ -426,7 +435,7 @@ addLayer("spr", {
     baseResource: "prestige points",
     baseAmount() {return player.pr.points},
     type: "normal",
-    exponent: 1/4,
+    exponent: 1/5,
     gainMult() {
         mult = new Decimal(1)
 		if (hasUpgrade('spr', 52)) mult = mult.mul(upgradeEffect('spr', 52))
@@ -501,7 +510,7 @@ addLayer("spr", {
 			title: "rebuilt",
 			description: "disable the first super prestige upgrades's first effect",
 			cost: new Decimal(1e6),
-			unlocked() {return hasUpgrade('spr', 12)},
+			unlocked() {return hasUpgrade('spr', 13)},
 		},
 		21: {
 			title: "no more losing progress",
@@ -578,37 +587,36 @@ addLayer("spr", {
 		},
 		51: {
 			title: "fasterer",
-			description: "prestige tokens add to first point buyable at a 50% rate",
+			description: "prestige tokens add to first point buyable at a one-fourth rate",
 			cost: new Decimal(2),
 			currencyDisplayName: "prestige tokens",
 			currencyInternalName: "tokens",
 			currencyLocation() {return player[this.layer]},
-			effect() {return new Decimal(1.5).pow(player.spr.total_tokens.div(2))},
+			effect() {return new Decimal(1)},
 			unlocked() {return hasUpgrade('spr', 11)},
 			canAfford() {return hasUpgrade('spr', 52)},
 			branches: [[61, "#ffffff", 8]],
 		},
 		52: {
-			title: "watch your step",
-			description: "×1.01 super prestige points per point buyable bought",
-			cost: new Decimal(3),
+			title: "perstige bootser",
+			description: "×1.5 super prestige points",
+			cost: new Decimal(5),
 			currencyDisplayName: "prestige tokens",
 			currencyInternalName: "tokens",
 			currencyLocation() {return player[this.layer]},
-			effect() {return new Decimal(1.01).pow(getBuyableAmount('p', 11).add(getBuyableAmount('p', 12)).add(getBuyableAmount('p', 13)))},
-			effectDisplay() { return "×"+format(upgradeEffect(this.layer, this.id)) },
+			effect() {return new Decimal(1.5)},
 			unlocked() {return hasUpgrade('spr', 11)},
 			canAfford() {return hasUpgrade('spr', 41) || hasUpgrade('spr', 42)},
 			branches: [[51, "#ffffff", 8],[62, "#ffffff", 8]],
 		},
 		53: {
 			title: "strongerer",
-			description: "prestige tokens add to second point buyable at a 50% rate",
+			description: "prestige tokens add to second point buyable at a one-fourth rate",
 			cost: new Decimal(2),
 			currencyDisplayName: "prestige tokens",
 			currencyInternalName: "tokens",
 			currencyLocation() {return player[this.layer]},
-			effect() {return new Decimal(1.5).pow(player.spr.total_tokens.div(2))},
+			effect() {return new Decimal(1)},
 			unlocked() {return hasUpgrade('spr', 11)},
 			canAfford() {return hasUpgrade('spr', 43)},
 			branches: [[62, "#ffffff", 8]],
@@ -616,7 +624,7 @@ addLayer("spr", {
 		54: {
 			title: "superpower",
 			description: "+0.25 first power tier milestone base",
-			cost: new Decimal(4),
+			cost: new Decimal(8),
 			currencyDisplayName: "prestige tokens",
 			currencyInternalName: "tokens",
 			currencyLocation() {return player[this.layer]},
@@ -775,7 +783,7 @@ addLayer("ach", {
 			done() {return getBuyableAmount('p', 13).gte(1)},
 		},
 		14: {
-			name: "the great slog of late pre-prestige",
+			name: "the great slog of pre-prestige",
 			tooltip: "have 10,000,000 points",
 			done() {return player.p.points.gte(1e7)},
 		},
@@ -785,7 +793,7 @@ addLayer("ach", {
 			done() {return player.pr.points.gt(0)},
 		},
 		21: {
-			name: "i am speed",
+			name: "accelerating upgrades",
 			tooltip: "purchase two of the first prestige point buyable",
 			done() {return getBuyableAmount('pr', 11).gte(2)},
 		},
@@ -820,19 +828,24 @@ addLayer("ach", {
 			done() {return hasUpgrade('spr', 11) && player.spr.points.gte(1)},
 		},
 		33: {
-			name: "never good enough",
-			tooltip: "get 100,000,000 prestige points in one reset",
-			done() {return player.pr.points.gte(1e7) && player.pt.points.lte(0)},
-		},
-		34: {
 			name: "overdrive",
 			tooltip: "reach power tier 20",
 			done() {return player.pt.points.gte(20)},
 		},
+		34: {
+			name: "t o k e n s",
+			tooltip: "reach 20 total prestige tokens",
+			done() {return player.spr.total_tokens.gte(20)},
+		},
 		35: {
-			name: "if i had a dime for every time i said...",
+			name: "if i had a dime for every time i said prestige...",
 			tooltip: "begin generating prestige power... also ENDGAME!",
 			done() {return hasUpgrade('spr', 62)},
+		},
+		41: {
+			name: "absolutely abhorrent anti-automators",
+			tooltip: "super prestige without any power tiers",
+			done() {return player.pt.points.gte(20)},
 		},
 	},
     row: "side",
